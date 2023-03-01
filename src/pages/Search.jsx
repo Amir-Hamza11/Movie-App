@@ -9,17 +9,18 @@ const Search = () => {
   const [input] = useInput();
   const [searchReasults, setSearchResults] = useState('');
 
-  // console.log(input);
   useEffect(() => {
 
     ApiGetSearch(`${input}`).then(res => setSearchResults(res))
   }, [input])
 
-  // console.log(searchReasults);
-
   return (
     <MainPageLayout>
-      <div className=' py-2 h-screen '  >
+      <div className=' py-2 h-full '  >
+
+        {searchReasults.results?.length === 0 &&
+          <div><h4 className='text-center' >Type somthing to display </h4></div>}
+
         {searchReasults && searchReasults.results.map((item) => {
           return (
             <SearchDisplay

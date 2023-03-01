@@ -1,85 +1,67 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
-import { Loader, Panel } from 'rsuite';
+import { Loader } from 'rsuite';
 import MainPageLayout from '../components/MainPageLayout';
-import { ApiGetMedia } from '../components/misc/config';
+import { ApiGetMedia, ApiGetVideos } from '../components/misc/config';
 
 const Movie = () => {
 
   const [movie, setMovie] = useState([])
+  const [videos, setVideos] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const { id } = useParams()
 
   useEffect(() => {
 
     ApiGetMedia(`movie/${id}`).then(r => setMovie(r))
+
+    ApiGetVideos(`movie/${id}`).then(r => setVideos(r))
+
     setIsLoading(false)
   }, [id])
 
-  const hours = Math.floor(movie.runtime / 60);
-  const minutes = movie.runtime % 60;
+  // const hours = Math.floor(movie.runtime / 60);
+  // const minutes = movie.runtime % 60;
 
-  console.log(movie);
+  console.log(videos);
+  // console.log(movie);
 
   return (
     <MainPageLayout>
-      {isLoading && !movie &&
+      {isLoading && !movie && !videos &&
         <div className='h-full flex justify-center items-center' >
           <Loader size='lg' />
         </div>}
-        
-      {!isLoading && movie &&
-        <div className='pt-10 md:flex justify-evenly '  >
-          <div className='mb-5 md:mb-0 flex md:flex-none justify-center ' >
-            <img src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
-              className="object-fill rounded-lg h-96 "
-              alt="poster" />
-          </div>
 
+      {!isLoading && movie && videos &&
+        <>
+          <section className='h-screen' >
+            <div className='h-screen relative ' >
+              <img src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
+                className='h-2/3 w-full mx-auto  object-cover  rounded-b-lg '
+                alt="backdrop" />
 
-          <div className=' mb-5 md:w-2/3 bg-gray-100 mx-5 md:mx-0' >
-            <Panel bordered shaded   >
-              <div className='flex flex-col h-96'>
-                <h4 className='mb-3 text-center text-blue-900 ' >
-                  {movie.name ? movie.name : movie.title}</h4>
+              <img src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
+                className="object-fill rounded-xl h-96 shadow-lg
+                 shadow-slate-400 absolute bottom-11 left-2 md:left-5 "
+                alt="poster" />
+            </div>
+          </section>
 
-                <p className='mb-3 text-center italic text-blue-900 ' >
-                  "{movie.tagline}"
-                </p>
-
-                <div className='mb-1' >
-                  <p className='italic text-gray-500'>
-                    <span className='font-bold text-blue-900 ' >Release Date:</span>{' '}
-                    {movie.release_date}</p>
-                </div>
-
-                <div className='mb-1' >
-                  <p className='italic text-gray-500' >
-                    <span className='font-bold text-blue-900 ' >Genres:</span>{' '}
-                    {movie.genres ? movie.genres.map((item) => ` ${item.name}, `) : "Unknown"}</p>
-                </div>
-
-                <div className='mb-1' >
-                  <p className='italic text-gray-500'>
-                    <span className='font-bold text-blue-900 ' >Status:</span>{' '}
-                    {movie.status}</p>
-                </div>
-
-                <div className='mb-1' >
-                  <p className='italic text-gray-500'>
-                    <span className='font-bold text-blue-900 ' >Run Time:</span>{' '}
-                    {`${hours}h ${minutes}m`}</p>
-                </div>
-
-                <div className='' >
-                  <p className='text-b text-gray-500' >
-                    <span className='font-bold text-blue-900 ' >Overview:</span>{' '}
-                    {movie.overview}</p>
-                </div>
+          <section className='w-full flex flex-wrap justify-evenly ' >
+            {videos.results?.map((item) => {
+              return <div key={item.id} >
+                <iframe 
+                className='w-full md:w-96 h-60 mb-3'
+                  src={`https://www.youtube.com/embed/${item.key}`}
+                  title="YouTube video player"
+                  frameBorder="0"
+                  allowFullScreen>
+                </iframe>
               </div>
-            </Panel>
-          </div>
-        </div>
+            })}
+          </section>
+        </>
       }
     </MainPageLayout>
   )

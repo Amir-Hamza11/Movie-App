@@ -17,21 +17,14 @@ const NavigationBar = () => {
           <div className='flex ml-5 ' >
             <Link to={'/movie-page'} className='text-sm border-2 px-2 py-1 rounded-full text-blue-100 ml-5' >Movies</Link>
             <Link to={'/tv-page'} className='text-sm border-2 px-2 py-1 rounded-full text-blue-100 ml-5'>TV Shows</Link>
-            <Link className='text-sm border-2 px-2 py-1 rounded-full text-blue-100 ml-5'>People</Link>
+            <Link to={'/saved'} className='text-sm border-2 px-2 py-1 rounded-full text-blue-100 ml-5'>Saved</Link>
           </div>
         </div>
 
         <div className='flex justify-center mt-2 md:ml-2 md:mt-0 ' >
           <SearchInput />
         </div>
-
-        {/* <div className='flex ml-auto mr-5 '>
-          <Link className='text-sm text-blue-100 ' to={'/saved'} >Saved</Link>
-        </div> */}
-
       </nav>
-
-
     </div>
   )
 }
